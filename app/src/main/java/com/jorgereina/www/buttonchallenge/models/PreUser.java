@@ -1,16 +1,16 @@
-package com.jorgereina.www.buttonchallenge;
+package com.jorgereina.www.buttonchallenge.models;
 
 /**
  * Created by jorgereina on 3/8/18.
  */
 
-public class User {
+public class PreUser {
 
     private String name;
     private String email;
     private String candidate;
 
-    public User(String name, String email, String candidate) {
+    public PreUser(String name, String email, String candidate) {
         this.name = name;
         this.email = email;
         this.candidate = candidate;

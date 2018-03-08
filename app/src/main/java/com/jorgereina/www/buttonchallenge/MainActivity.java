@@ -1,14 +1,17 @@
 package com.jorgereina.www.buttonchallenge;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.jorgereina.www.buttonchallenge.models.PreUser;
+import com.jorgereina.www.buttonchallenge.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +29,12 @@ public class MainActivity extends AppCompatActivity {
     private EditText nameEt;
     private EditText emailEt;
     private EditText candidateEt;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private Button createBtn;
     private ButtonAdapter adapter;
-    private List<UserResponse> responseList = new ArrayList<>();
+    private List<User> responseList = new ArrayList<>();
 
 
     @Override
@@ -38,73 +42,86 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        adapter = new ButtonAdapter(getApplicationContext(), responseList);
-        layoutManager = new LinearLayoutManager(this);
-        nameEt = findViewById(R.id.name_et);
-        emailEt = findViewById(R.id.email_et);
-        candidateEt = findViewById(R.id.candidate_et);
-        recyclerView = findViewById(R.id.users_rv);
-        createBtn = findViewById(R.id.create_btn);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
-        getNetworkRequest();
-
-        createBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postNetworkRequest();
-                getNetworkRequest();
-            }
-        });
+        initializeViewsandSetup();
+        getUserLisRequest();
+        setListeners();
     }
 
-    private void getNetworkRequest() {
+    private void getUserLisRequest() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ButtonService service = retrofit.create(ButtonService.class);
-        Call<List<UserResponse>> call = service.getUserist();
-        call.enqueue(new Callback<List<UserResponse>>() {
+        Call<List<User>> call = service.getUserist();
+        call.enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(Call<List<UserResponse>> call, Response<List<UserResponse>> response) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 responseList.addAll(response.body());
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<List<UserResponse>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t+"", Toast.LENGTH_LONG).show();
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void postNetworkRequest() {
+    private void createNewUserRequest() {
 
         String name = nameEt.getText().toString();
         String email = emailEt.getText().toString();
         String candidate = candidateEt.getText().toString();
 
-        User user = new User(name, email, candidate);
+        PreUser user = new PreUser(name, email, candidate);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ButtonService service = retrofit.create(ButtonService.class);
-        Call<UserResponse> call = service.createUser(user);
-        call.enqueue(new Callback<UserResponse>() {
+        Call<User> call = service.createUser(user);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
             }
 
             @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
-
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
     }
 
+    private void setListeners() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getUserLisRequest();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewUserRequest();
+            }
+        });
+    }
+
+    private void initializeViewsandSetup() {
+        adapter = new ButtonAdapter(getApplicationContext(), responseList);
+        layoutManager = new LinearLayoutManager(this);
+        nameEt = findViewById(R.id.name_et);
+        emailEt = findViewById(R.id.email_et);
+        candidateEt = findViewById(R.id.candidate_et);
+        swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        recyclerView = findViewById(R.id.users_rv);
+        createBtn = findViewById(R.id.create_btn);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
 }
