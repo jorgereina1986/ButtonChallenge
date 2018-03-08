@@ -3,6 +3,7 @@ package com.jorgereina.www.buttonchallenge;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -16,7 +17,7 @@ public interface ButtonService {
     @GET("user?candidate=jsr11237")
     Call<List<UserResponse>> getUserist();
 
-    @POST("")
-    Call<UserResponse> createUser();
+    @POST("user")
+    Call<UserResponse> createUser(@Body User user);
 
 }

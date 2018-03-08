@@ -10,6 +10,12 @@ public class User {
     private String email;
     private String candidate;
 
+    public User(String name, String email, String candidate) {
+        this.name = name;
+        this.email = email;
+        this.candidate = candidate;
+    }
+
     public String getName() {
         return name;
     }
