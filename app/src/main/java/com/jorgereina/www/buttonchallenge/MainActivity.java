@@ -1,10 +1,12 @@
 package com.jorgereina.www.buttonchallenge;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeViewsandSetup();
+        initializeViewsAndSetup();
         getUserLisRequest();
         setListeners();
     }
@@ -74,24 +76,37 @@ public class MainActivity extends AppCompatActivity {
         String email = emailEt.getText().toString();
         String candidate = candidateEt.getText().toString();
 
-        PreUser user = new PreUser(name, email, candidate);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ButtonService service = retrofit.create(ButtonService.class);
-        Call<User> call = service.createUser(user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+        if (name.isEmpty() || email.isEmpty() || candidate.isEmpty()) {
+            showAlertDialog(R.string.alert_dialog_emty_field_title, R.string.alert_dialog_empty_field_message);
+            if (!isValidEmail(email)){
+                showAlertDialog(R.string.alert_dialog_invalid_email_title, R.string.alert_dialog_invalid_email_message);
             }
+        } else {
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            if (!isValidEmail(email)){
+                showAlertDialog(R.string.alert_dialog_invalid_email_title, R.string.alert_dialog_invalid_email_message);
             }
-        });
+            else {
+                PreUser user = new PreUser(name, email, candidate);
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                ButtonService service = retrofit.create(ButtonService.class);
+                Call<User> call = service.createUser(user);
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }
 
     }
 
@@ -112,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initializeViewsandSetup() {
+    private void initializeViewsAndSetup() {
         adapter = new ButtonAdapter(getApplicationContext(), responseList);
         layoutManager = new LinearLayoutManager(this);
         nameEt = findViewById(R.id.name_et);
@@ -123,5 +138,22 @@ public class MainActivity extends AppCompatActivity {
         createBtn = findViewById(R.id.create_btn);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    public final boolean isValidEmail(CharSequence target) {
+        if (TextUtils.isEmpty(target)) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+
+    private void showAlertDialog(int title, int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setNeutralButton(android.R.string.ok, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -11,13 +11,13 @@
         android:id="@+id/name_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name" />
+        android:hint="@string/edit_text_name_hint" />
 
     <EditText
         android:id="@+id/email_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="@string/edit_text_email_hint"
         android:inputType="textEmailAddress" />
 
     <LinearLayout
@@ -31,16 +31,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="Candidate" />
+            android:hint="@string/edit_text_candidate_hint" />
 
         <Button
             android:id="@+id/create_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="create" />
+            android:text="@string/button_create_text" />
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_view_swipe_down_to_refresh_list_text"
+        android:layout_gravity="center_horizontal"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="wrap_content"
