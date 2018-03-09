@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jorgereina.www.buttonchallenge.models.PreUser;
@@ -27,10 +29,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://fake-button.herokuapp.com/";
+    private static final String CANDIDATE_PARAMETER = "jsr11237";
 
     private EditText nameEt;
     private EditText emailEt;
-    private EditText candidateEt;
+    private TextView candidateEt;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -72,23 +75,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNewUserRequest() {
 
-        String name = nameEt.getText().toString();
+        final String name = nameEt.getText().toString();
         String email = emailEt.getText().toString();
-        String candidate = candidateEt.getText().toString();
+        String candidate = CANDIDATE_PARAMETER;
 
-        if (name.isEmpty() || email.isEmpty() || candidate.isEmpty()) {
+        if (name.isEmpty() || email.isEmpty()) {
             showAlertDialog(R.string.alert_dialog_emty_field_title, R.string.alert_dialog_empty_field_message);
-            if (!isValidEmail(email)){
+            if (!isValidEmail(email)) {
                 showAlertDialog(R.string.alert_dialog_invalid_email_title, R.string.alert_dialog_invalid_email_message);
             }
         } else {
 
-            if (!isValidEmail(email)){
+            if (!isValidEmail(email)) {
                 showAlertDialog(R.string.alert_dialog_invalid_email_title, R.string.alert_dialog_invalid_email_message);
-            }
-            else {
+            } else {
                 PreUser user = new PreUser(name, email, candidate);
-
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create())
@@ -98,11 +99,22 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
+                        clearTextFields();
+                        Toast toast = Toast.makeText(
+                                getApplicationContext(),
+                                R.string.toast_create_user_success,
+                                Toast.LENGTH_LONG
+                        );
+                        toast.setGravity(Gravity.TOP, 0, 0);
+                        toast.show();
+
+
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(
+                                getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -155,5 +167,10 @@ public class MainActivity extends AppCompatActivity {
         builder.setNeutralButton(android.R.string.ok, null);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void clearTextFields() {
+        nameEt.setText("");
+        emailEt.setText("");
     }
 }

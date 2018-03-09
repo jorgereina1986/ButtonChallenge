@@ -9,4 +9,5 @@
     <string name="edit_text_name_hint">Name</string>
     <string name="button_create_text">create</string>
     <string name="text_view_swipe_down_to_refresh_list_text">Swipe down to refresh list</string>
+    <string name="toast_create_user_success">New user created!\nSwipe list down to refresh.</string>
 </resources>
