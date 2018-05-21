@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="user"
+            type="com.jorgereina.www.buttonchallenge.models.User" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{user.name}"/>
+
+        <TextView
+            android:id="@+id/item_email_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{user.email}"/>
+
+        <TextView
+            android:id="@+id/item_candidate_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{user.candidate}"/>
+
+    </LinearLayout>
+</layout>
