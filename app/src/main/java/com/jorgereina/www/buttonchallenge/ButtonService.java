@@ -17,7 +17,7 @@ import retrofit2.http.POST;
 public interface ButtonService {
 
     @GET("user?candidate=jsr11237")
-    Call<List<User>> getUserist();
+    Call<List<User>> getUsers();
 
     @POST("user")
     Call<User> createUser(@Body PreUser user);

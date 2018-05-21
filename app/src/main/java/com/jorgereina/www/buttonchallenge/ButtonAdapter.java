@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jorgereina.www.buttonchallenge.databinding.ItemRowBinding;
 import com.jorgereina.www.buttonchallenge.models.User;
 
 import java.util.List;
@@ -27,16 +28,17 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_row, parent, false);
-        return new ViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        ItemRowBinding binding = ItemRowBinding.inflate(inflater, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = userList.get(position);
-        holder.nameTv.setText(user.getName());
-        holder.emailTv.setText(user.getEmail());
-        holder.candidateTv.setText(user.getCandidate());
+        holder.binding.setUser(user);
+        holder.binding.executePendingBindings();
+
     }
 
     @Override
@@ -45,15 +47,12 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTv;
-        TextView emailTv;
-        TextView candidateTv;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            nameTv = itemView.findViewById(R.id.item_name_tv);
-            emailTv = itemView.findViewById(R.id.item_email_tv);
-            candidateTv = itemView.findViewById(R.id.item_candidate_tv);
+        private ItemRowBinding binding;
+
+        public ViewHolder(ItemRowBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 
