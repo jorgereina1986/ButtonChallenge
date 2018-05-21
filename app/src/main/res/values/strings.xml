@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ButtonChallenge</string>
+    <string name="alert_dialog_emty_field_title">Empty field</string>
+    <string name="alert_dialog_empty_field_message">Please fill out all of the fields</string>
+    <string name="alert_dialog_invalid_email_title">Invalid Email Address</string>
+    <string name="alert_dialog_invalid_email_message">Make sure yor email address is properly formatted</string>
+    <string name="edit_text_candidate_hint">Candidate: jsr11237</string>
+    <string name="edit_text_email_hint">Email</string>
+    <string name="edit_text_name_hint">Name</string>
+    <string name="button_create_text">create</string>
+    <string name="text_view_swipe_down_to_refresh_list_text">Swipe down to refresh list</string>
+    <string name="toast_create_user_success">New user created!\nSwipe list down to refresh.</string>
+</resources>
