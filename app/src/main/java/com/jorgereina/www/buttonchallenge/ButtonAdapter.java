@@ -1,34 +1,25 @@
 package com.jorgereina.www.buttonchallenge;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.jorgereina.www.buttonchallenge.databinding.ItemRowBinding;
 import com.jorgereina.www.buttonchallenge.models.User;
 
 import java.util.List;
 
-/**
- * Created by jorgereina on 3/8/18.
- */
-
 public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder> {
 
-    private Context context;
     private List<User> userList;
 
-    public ButtonAdapter(Context context, List<User> userList) {
-        this.context = context;
+    public ButtonAdapter(List<User> userList) {
         this.userList = userList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemRowBinding binding = ItemRowBinding.inflate(inflater, parent, false);
         return new ViewHolder(binding);
     }

@@ -10,10 +10,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 
-/**
- * Created by jorgereina on 3/8/18.
- */
-
 public interface ButtonService {
 
     @GET("user?candidate=jsr11237")

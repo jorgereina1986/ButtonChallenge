@@ -1,9 +1,5 @@
 package com.jorgereina.www.buttonchallenge.models;
 
-/**
- * Created by jorgereina on 3/8/18.
- */
-
 public class PreUser {
 
     private String name;

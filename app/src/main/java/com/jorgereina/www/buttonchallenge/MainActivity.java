@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViewsAndSetup() {
-        adapter = new ButtonAdapter(getApplicationContext(), responseList);
+        adapter = new ButtonAdapter(responseList);
         swipeRefreshLayout = findViewById(R.id.swipe_layout);
         binding.usersRv.setLayoutManager(new LinearLayoutManager(this));
         binding.usersRv.setAdapter(adapter);
